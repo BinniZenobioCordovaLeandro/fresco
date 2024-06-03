@@ -13,6 +13,12 @@ final class RequestSuccess extends RequestState {
   RequestSuccess(this.data);
 }
 
+final class ListRequestSuccess extends RequestState {
+  final List<RequestModel> requests;
+
+  ListRequestSuccess(this.requests);
+}
+
 final class RequestFailure extends RequestState {
   final String error;
 

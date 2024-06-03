@@ -1,7 +1,8 @@
 abstract class AbstractRepository<T> {
-  Future<Map<String, dynamic>> create(Map<String, dynamic> model);
-  Future<Map<String, dynamic>> update(Map<String, dynamic> model);
-  Future delete(T model);
+  AbstractRepository(T service);
+  Future<Map<String, dynamic>> create(Map<String, dynamic> data);
+  Future<Map<String, dynamic>> update(Map<String, dynamic> data);
+  Future delete(T data);
   Future<List<Map<String, dynamic>>> getAll();
   Future<Map<String, dynamic>> getById(String id);
 }

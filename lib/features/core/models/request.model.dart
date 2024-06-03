@@ -4,8 +4,8 @@ class RequestModel {
   String? id;
   String? title;
   String? description;
-  int? latitude;
-  int? longitude;
+  double? latitude;
+  double? longitude;
   String? status;
   int? createdAt;
   int? updatedAt;
@@ -30,8 +30,8 @@ class RequestModel {
         id: data['id'] as String?,
         title: data['title'] as String?,
         description: data['description'] as String?,
-        latitude: data['latitude'] as int?,
-        longitude: data['longitude'] as int?,
+        latitude: data['latitude'] as double?,
+        longitude: data['longitude'] as double?,
         status: data['status'] as String?,
         createdAt: data['createdAt'] as int?,
         updatedAt: data['updatedAt'] as int?,
@@ -58,8 +58,8 @@ class RequestModel {
     String? id,
     String? title,
     String? description,
-    int? latitude,
-    int? longitude,
+    double? latitude,
+    double? longitude,
     String? status,
     int? createdAt,
     int? updatedAt,

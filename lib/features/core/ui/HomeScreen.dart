@@ -6,7 +6,9 @@ import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_ti
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:myapp/features/core/bloc/request_bloc.dart';
+import 'package:myapp/features/core/repositories/firestore.repository.dart';
 import 'package:myapp/features/core/ui/components/RequestButton.component.dart';
+import 'package:myapp/shared/services/firestore.service.dart';
 
 class MyHomePage extends HookWidget {
   const MyHomePage({super.key});
@@ -15,9 +17,11 @@ class MyHomePage extends HookWidget {
   Widget build(BuildContext context) {
     final mapController = MapController();
     final position = useState<Position?>(null);
+    final service = FirestoreService();
+    final firestore = RequestRepository(service);
 
     return BlocProvider(
-      create: (context) => RequestBloc(),
+      create: (context) => RequestBloc(firestore),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -25,11 +29,12 @@ class MyHomePage extends HookWidget {
         ),
         body: FlutterMap(
           mapController: mapController,
-          options: const MapOptions(
-            initialCenter: LatLng(51.5, -0.09),
-            initialZoom: 9.2,
+          options: MapOptions(
+            initialCenter: const LatLng(51.5, -0.09),
+            initialZoom: 15,
             maxZoom: 19,
             minZoom: 10,
+            onMapReady: () {},
           ),
           children: [
             TileLayer(
@@ -72,13 +77,15 @@ class MyHomePage extends HookWidget {
                           } else if (snapshot.hasData) {
                             position.value = snapshot.data as Position;
                             WidgetsFlutterBinding.ensureInitialized()
-                                .addPostFrameCallback((_) {
-                              mapController.move(
-                                  LatLng(position.value!.latitude,
-                                      position.value!.longitude),
-                                  13);
-                            });
-                            // evaluate RequestLoading
+                                .addPostFrameCallback(
+                              (_) {
+                                mapController.move(
+                                  LatLng(position.value?.latitude ?? 0.0,
+                                      position.value?.longitude ?? 0.0),
+                                  15,
+                                );
+                              },
+                            );
                             return RequestButtonComponent(
                               latitude: position.value!.latitude,
                               longitude: position.value!.longitude,
