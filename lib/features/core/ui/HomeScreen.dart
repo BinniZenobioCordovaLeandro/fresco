@@ -62,7 +62,7 @@ class _MyHomePage extends HookWidget {
           TileLayer(
             tileProvider: CancellableNetworkTileProvider(),
             urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            userAgentPackageName: 'com.example.app',
+            subdomains: const ['a', 'b', 'c'],
           ),
           RichAttributionWidget(
             attributions: [
