@@ -3,6 +3,8 @@ part of 'request_bloc.dart';
 @immutable
 sealed class RequestEvent {}
 
+final class InitialRequest extends RequestEvent {}
+
 final class RequestStarted extends RequestEvent {
   final double latitude;
   final double longitude;

@@ -13,14 +13,21 @@ final class RequestSuccess extends RequestState {
   RequestSuccess(this.data);
 }
 
+final class RequestFailure extends RequestState {
+  final String error;
+
+  RequestFailure(this.error);
+}
+
 final class ListRequestSuccess extends RequestState {
   final List<RequestModel> requests;
 
   ListRequestSuccess(this.requests);
 }
 
-final class RequestFailure extends RequestState {
-  final String error;
+final class PositionSuccess extends RequestState {
+  final double latitude;
+  final double longitude;
 
-  RequestFailure(this.error);
+  PositionSuccess(this.latitude, this.longitude);
 }

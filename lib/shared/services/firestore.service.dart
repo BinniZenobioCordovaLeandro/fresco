@@ -17,7 +17,11 @@ class FirestoreService implements AbstractService {
     Query<Object?> query = collectionReference;
     if (params?.isNotEmpty == true) {
       params?.forEach((key, value) {
-        query = query.where(key, isEqualTo: params[key]);
+        if (key.contains('At')) {
+          query = query.where(key, isGreaterThan: params[key]);
+        } else {
+          query = query.where(key, isEqualTo: params[key]);
+        }
       });
     }
     if (orderBy?.isNotEmpty == true) {
@@ -69,11 +73,11 @@ class FirestoreService implements AbstractService {
 
   @override
   Future delete(String endpoint, {Map<String, dynamic>? params}) async {
-    CollectionReference collectionReference = firestore.collection(endpoint);
     if (params?["id"] == null) {
       throw Exception("Id is required");
     }
-    await collectionReference.doc(params?["id"]).delete();
+    CollectionReference collectionReference = firestore.collection(endpoint);
+    await collectionReference.doc(params!["id"]).delete();
     return Future.value();
   }
 }

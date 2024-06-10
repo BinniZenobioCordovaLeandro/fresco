@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:myapp/features/core/interfaces/abstract.repository.dart';
-import 'package:myapp/features/core/repositories/mocks/requests.mock.dart';
 import 'package:myapp/shared/interface/abstract.service.dart';
 
 class RequestRepository implements AbstractRepository {
@@ -17,24 +15,23 @@ class RequestRepository implements AbstractRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> update(Map<String, dynamic> data) {
-    return Future.delayed(
-      const Duration(seconds: 3),
-      () => requestsMock[0],
-    );
+  Future<Map<String, dynamic>> update(String id, Map<String, dynamic> data) {
+    return service.patch(baseUrl, body: jsonEncode(data));
   }
 
   @override
-  Future delete(data) {
-    return Future.delayed(
-      const Duration(seconds: 3),
-      () => null,
-    );
+  Future delete(String id) {
+    return update(id, {"status": "cancelled"});
   }
 
   @override
   Future<List<Map<String, dynamic>>> getAll() {
-    return service.get(baseUrl);
+    return service.get(baseUrl, params: {
+      "createdAt": DateTime.now()
+          .subtract(const Duration(days: 7))
+          .millisecondsSinceEpoch,
+      "status": "pending",
+    });
   }
 
   @override
