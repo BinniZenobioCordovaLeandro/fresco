@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:myapp/features/core/bloc/request_bloc.dart';
 import 'package:myapp/features/core/repositories/firestore.repository.dart';
@@ -58,16 +59,6 @@ class _MyHomePage extends HookWidget {
           },
         ),
         children: [
-          // BlocListener(listener: (context, state) {
-          //   if (state is PositionSuccess) {
-          //     lastLatitude.value = state.latitude;
-          //     lastLongitude.value = state.longitude;
-          //     mapController.move(
-          //       LatLng(state.latitude, state.longitude),
-          //       15,
-          //     );
-          //   }
-          // }),
           TileLayer(
             tileProvider: CancellableNetworkTileProvider(),
             urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -81,7 +72,28 @@ class _MyHomePage extends HookWidget {
               ),
             ],
           ),
-          MarkerLayer(markers: markers.value),
+          MarkerClusterLayerWidget(
+            options: MarkerClusterLayerOptions(
+              maxClusterRadius: 45,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(50),
+              maxZoom: 15,
+              markers: markers.value,
+              builder: (context, markers) {
+                return Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.blue),
+                  child: Center(
+                    child: Text(
+                      markers.length.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
           BlocConsumer<RequestBloc, RequestState>(listener: (context, state) {
             if (state is PositionSuccess) {
               lastLatitude.value = state.latitude;
@@ -105,7 +117,10 @@ class _MyHomePage extends HookWidget {
                   .map(
                     (e) => Marker(
                       point: LatLng(e.latitude!, e.longitude!),
-                      child: const Icon(Icons.water_damage),
+                      child: const Icon(
+                        Icons.water_damage,
+                        color: Colors.blue,
+                      ),
                     ),
                   )
                   .toList();

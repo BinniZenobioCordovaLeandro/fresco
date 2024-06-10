@@ -14,21 +14,25 @@ class RequestBloc extends Bloc<RequestEvent, RequestState> {
   RequestBloc(this.repository) : super(RequestInitial()) {
     on<RequestEvent>((RequestEvent event, emit) async {
       if (event is InitialRequest) {
-        var data = await repository.getAll();
-        var models = List<RequestModel>.from(
-          data.map((e) => RequestModel.fromMap(e)),
-        );
-        emit(ListRequestSuccess(models));
+        try {
+          var data = await repository.getAll();
+          var models = List<RequestModel>.from(
+            data.map((e) => RequestModel.fromMap(e)),
+          );
+          emit(ListRequestSuccess(models));
 
-        Position position = await Geolocator.getCurrentPosition();
-        emit(PositionSuccess(position.latitude, position.longitude));
+          Position position = await Geolocator.getCurrentPosition();
+          emit(PositionSuccess(position.latitude, position.longitude));
 
-        Stream<Position> stream = Geolocator.getPositionStream();
-        stream.listen((Position position) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            emit(PositionSuccess(position.latitude, position.longitude));
+          Stream<Position> stream = Geolocator.getPositionStream();
+          stream.listen((Position position) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              emit(PositionSuccess(position.latitude, position.longitude));
+            });
           });
-        });
+        } catch (e) {
+          emit(RequestFailure("Error $e"));
+        }
       } else if (event is RequestStarted) {
         emit(RequestLoading());
         double latitude = event.latitude;
