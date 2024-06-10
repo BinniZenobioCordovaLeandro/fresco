@@ -25,26 +25,48 @@ class RequestButtonComponent extends StatelessWidget {
             ],
           );
         } else if (state is RequestSuccess) {
-          return ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(Colors.red),
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Title(
+                    color: Colors.green,
+                    title: 'Pediste AGUA',
+                    child: Text('''
+              Estas pidiendo agua por 10Minutos a tu actual ubicacion.
+              Luego de eso debera volver a pedir un aguatero nuevamente.
+              '''),
+                  ),
+                  OutlinedButton.icon(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.red),
+                      overlayColor: WidgetStateProperty.all(Colors.redAccent),
+                    ),
+                    onPressed: () {
+                      BlocProvider.of<RequestBloc>(context)
+                          .add(RequestCancelled());
+                    },
+                    label: const Text('Cancelar pedido ahora'),
+                    icon: const Icon(Icons.cancel),
+                  ),
+                ],
+              ),
             ),
-            onPressed: () {
-              BlocProvider.of<RequestBloc>(context).add(RequestCancelled());
-            },
-            child: const Text('Cancelar solicitud'),
           );
         } else if (state is RequestFailure) {
           return Text('Error: ${state.error}');
         } else {
-          return ElevatedButton(
+          return ElevatedButton.icon(
+            icon: const Icon(Icons.my_location_outlined),
+            label: const Text('Pedir AGUATERO\na mi ubicación actual'),
             onPressed: () {
               BlocProvider.of<RequestBloc>(context).add(RequestStarted(
                 latitude: latitude,
                 longitude: longitude,
               ));
             },
-            child: const Text('Solicitar agua'),
           );
         }
       },

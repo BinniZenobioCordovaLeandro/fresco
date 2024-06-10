@@ -38,7 +38,7 @@ class _MyHomePage extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Solicita agua potable a domicilio"),
+        title: const Text("AGUATERO a Domicilio"),
       ),
       body: FlutterMap(
         mapController: mapController,
@@ -100,7 +100,7 @@ class _MyHomePage extends HookWidget {
               lastLongitude.value = state.longitude;
               mapController.move(
                 LatLng(state.latitude, state.longitude),
-                15,
+                20,
               );
               markers.value = [
                 ...markers.value,
@@ -129,6 +129,18 @@ class _MyHomePage extends HookWidget {
             return const SizedBox();
           }),
           Align(
+            alignment: Alignment.topCenter,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Anuncia que quieres agua con un click y un aguatero llegara a tu ubicacion.",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+            ),
+          ),
+          Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -141,7 +153,7 @@ class _MyHomePage extends HookWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CircularProgressIndicator(),
-                        Text('Obteniendo ubicación...'),
+                        Text('Localizando tu ubicación...'),
                       ],
                     ),
             ),
